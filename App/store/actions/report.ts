@@ -7,7 +7,7 @@ export const fetchReports = (): AppThunk<Promise<void>> => async dispatch => {
 
     const action: ReportActionTypes = {
         type: LOAD_REPORTS,
-        userReports: [{ id: 'r1', date: new Date(), location: 'Meridaa', description: 'Pues vi a un bato haciendo mamadas', ownerId: 'u1' }]
+        userReports: [{ id: 'r1', date: new Date(), location: 'Merida', description: 'Pues vi a un bato haciendo mamadas', ownerId: 'u1' }]
     }
 
     dispatch(action);
@@ -17,6 +17,6 @@ function fakePromise() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(true);
-        }, 3000);
+        }, 500);
     });
 }

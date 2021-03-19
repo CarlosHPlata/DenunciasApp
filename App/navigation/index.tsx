@@ -3,6 +3,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import { ColorSchemeName } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
+import AddReportScreen from '../screens/AddReportScreen';
 
 
 const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
@@ -19,6 +20,7 @@ const HelloStack = createStackNavigator();
 const HelloNavigator = () => (
     <HelloStack.Navigator>
         <HelloStack.Screen name="Home" component={HomeScreen} />
+        <HelloStack.Screen name="AddReport" component={AddReportScreen} />
     </HelloStack.Navigator>
 );
 
