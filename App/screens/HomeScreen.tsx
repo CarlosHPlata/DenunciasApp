@@ -3,11 +3,12 @@ import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/types/root';
 
+import { Report } from '../store/types/report';
 import * as reportActions from '../store/actions/report';
 import useLoadWithAction from '../hooks/useLoaWithAction';
 
 const HomeScreen = (props:any) => {
-    const reports: string[] = useSelector( (state:RootState) => state.reports.userReports );
+    const reports: Report[] = useSelector( (state:RootState) => state.reports.userReports );
     const [isLoading, error] = useLoadWithAction(reportActions.fetchReports);
 
     if (isLoading){
@@ -19,8 +20,7 @@ const HomeScreen = (props:any) => {
     return (
         <FlatList 
             data = { reports }
-            keyExtractor={item => item}
-            renderItem = { itemData => (<View><Text>{itemData.item}</Text></View>)}
+            renderItem = { itemData => (<View><Text>{itemData.item.description}</Text></View>)}
         />
     );
 };
