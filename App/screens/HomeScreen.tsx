@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Button, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/types/root';
 
@@ -15,7 +15,9 @@ const HomeScreen = (props:any) => {
 
     if (isLoading){
         return (
-            <View><Text>IS LOADING</Text></View>
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size="small" color='red' />
+            </View>
         );
     }
 
@@ -24,8 +26,9 @@ const HomeScreen = (props:any) => {
             <FlatList 
                 style = { styles.screen }
                 data = { reports }
-                renderItem = { itemData => <ReportCard onPress={() => {props.navigation.navigate('AddReport')}} report={itemData.item} />}
-            />  
+                renderItem = { itemData => <ReportCard onPress={() => { console.log('touch me senpai') }} report={itemData.item} />}
+            /> 
+            <Button title='Haz una Denuncia' onPress={() => { props.navigation.navigate('AddReport') }} />
         </View>
     );
 };
