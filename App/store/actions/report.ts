@@ -1,36 +1,71 @@
 import { LOAD_REPORTS, Report, ReportActionTypes } from '../types/report';
 import { AppThunk } from '../types/root';
 
+import ENV from '../../../env';
+
 export const fetchReports = (): AppThunk<Promise<void>> => async dispatch => {
-    //fetch somewhere the reports
-    await fakePromise();
 
-    const action: ReportActionTypes = {
-        type: LOAD_REPORTS,
-        userReports: [{ id: 'r1', date: new Date(), location: {location: {latitude: 37.78334820110777, longitude: -122.4329599365592}, address: "2168 Bush St, San Francisco, CA 94115, USA"}, description: 'Pues vi a un bato haciendo mamadas', state: 'Iniciada', ownerId: 'u1' }]
-    };
+    try {
+        const response = await fetch(`${ENV.firebaseUrl}reports/u2.json`);
 
-    dispatch(action);
+        if (!response.ok){
+            throw new Error('Something went wrong!');
+        }
+
+        const resData = await response.json();
+        const loadedReports:Report[] = [];
+
+        for (let key in resData) {
+            loadedReports.push({ 
+                id: key, 
+                date: new Date(resData[key].date), 
+                location: resData[key].location, 
+                description: resData[key].description, 
+                state: resData[key].state, 
+                ownerId: 'u2' 
+            });
+        }
+
+        const action: ReportActionTypes = {
+            type: LOAD_REPORTS,
+            userReports: loadedReports
+        };
+
+        dispatch(action);
+    } catch (err){
+        throw err;
+    }
 };
+
+
 
 export const addReport = (report:Report): AppThunk<Promise<void>> => async dispatch => {
-    await fakePromise();
+    const state = 'iniciada';
 
-    report['id'] = new Date().getTime()+'';
-    report['state'] = 'iniciada';
-    
-    const action: ReportActionTypes = {
-        type: 'ADD_REPORT',
-        report: report
-    }; 
+    try {
+        const response = await fetch(`${ENV.firebaseUrl}reports/u2.json`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application.json'},
+            body: JSON.stringify({date: report.date, location: report.location, description: report.description, state})
+        });
 
-    dispatch(action);
+        
+        if (!response.ok) {
+            throw new Error('Something went wrong');
+        }
+
+        const resData = await response.json();
+
+        report['id'] = resData.name+'';
+        report['state'] = state;
+
+        const action: ReportActionTypes = {
+            type: 'ADD_REPORT',
+            report: report
+        }; 
+
+        dispatch(action);
+    } catch (err) {
+        throw err;
+    }
 };
-
-function fakePromise() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(true);
-        }, 500);
-    });
-}

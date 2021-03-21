@@ -8,15 +8,22 @@ import * as reportActions from '../store/actions/report';
 import useLoadWithAction from '../hooks/useLoaWithAction';
 
 import ReportCard from '../components/report/ReportCard';
+import { useTheme } from '@react-navigation/native';
+import CustomButton from '../components/UI/CustomButton';
+import useAsyncActionDispatcher from '../hooks/useAsyncActionDispatcher';
 
 const HomeScreen = (props:any) => {
     const reports: Report[] = useSelector( (state:RootState) => state.reports.userReports );
     const [isLoading, error] = useLoadWithAction(reportActions.fetchReports);
 
+    const colors:any = useTheme().colors;
+
+    const [fetchReports, loadingReports, errorReports] = useAsyncActionDispatcher(reportActions.fetchReports, []);
+
     if (isLoading){
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <ActivityIndicator size="small" color='red' />
+                <ActivityIndicator size="small" color={colors.accent} />
             </View>
         );
     }
@@ -26,9 +33,11 @@ const HomeScreen = (props:any) => {
             <FlatList 
                 style = { styles.screen }
                 data = { reports }
+                onRefresh={fetchReports}
+                refreshing={loadingReports}
                 renderItem = { itemData => <ReportCard onPress={() => { console.log('touch me senpai') }} report={itemData.item} />}
             /> 
-            <Button title='Haz una Denuncia' onPress={() => { props.navigation.navigate('AddReport') }} />
+            <CustomButton title='Haz una Denuncia' onPress={() => { props.navigation.navigate('AddReport') }} />
         </View>
     );
 };
@@ -38,9 +47,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     reportCard: {
-        marginHorizontal: 10,
+        marginHorizontal: 0,
         marginVertical: 10,
-    }
+    },
+
 });
 
 export default HomeScreen

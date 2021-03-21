@@ -10,6 +10,8 @@ import InputContainer from '../components/UI/InputContainer';
 import * as ReportActions from '../store/actions/report';
 import useAsyncActionDispatcher from '../hooks/useAsyncActionDispatcher';
 import LocationPicker from '../components/UI/LocationPicker';
+import CustomButton from '../components/UI/CustomButton';
+import { useTheme } from '@react-navigation/native';
 
 interface FullLocation {
     location: {
@@ -23,6 +25,7 @@ const AddReportScreen = (props:any) => {
     const [ date, setDate ] = useState(new Date());
     const [ location, setLocation ] = useState<FullLocation>();
     const [ description, setDescription ] = useState('');
+    const colors:any = useTheme().colors;
 
     const [ showDate, setShowDate ] = useState(false);
 
@@ -52,13 +55,13 @@ const AddReportScreen = (props:any) => {
             <ScrollView style={styles.scroll}>
                 <View style={styles.form}>
 
-                    <InputContainer label="Cuando viste la infraccion?" iconName="time-outline">
+                    <InputContainer label="Cuando viste la infraccion?" iconName="time-outline" iconColor={colors.primary}>
                         <AdaptativeTouchable style={styles.input} onPress={() => {setShowDate(true)}}> 
-                            <Text>{date.toISOString()}</Text>
+                            <Text>{date.toISOString().split('T')[0]}</Text>
                         </AdaptativeTouchable>
                     </InputContainer>
 
-                    <InputContainer label="Donde viste la infraccion?" iconName="locate-outline">
+                    <InputContainer label="Donde viste la infraccion?" iconName="locate-outline" iconColor={colors.primary}>
                         <LocationPicker onMapOpen={() => {props.navigation.navigate('Map', {location: location?.location})}} onLocationChange={(res:FullLocation) => {setLocation(res)}} route={props.route} />
                     </InputContainer>
 
@@ -82,18 +85,16 @@ const AddReportScreen = (props:any) => {
                             />
                         </View>
                     )}
-
-                    <View style={styles.buttonContainer}>
-                        { !isLoading? (
-                            <Button title="LEVANTAR DENUNCIA" onPress={onFormUpdate} />
-                        ) : (
-                            <ActivityIndicator size='small' color='red' />
-                        )}
-                        
-                    </View>
-
                 </View>
             </ScrollView>
+            <View style={styles.buttonContainer}>
+                { !isLoading? (
+                    <CustomButton title="LEVANTAR DENUNCIA" onPress={onFormUpdate} />
+                ) : (
+                    <ActivityIndicator size='small' color={colors.accent} />
+                )}
+                
+            </View>
         </KeyboardAvoidingView>
     );
 };

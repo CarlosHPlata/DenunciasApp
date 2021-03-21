@@ -1,16 +1,16 @@
 import React from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ColorSchemeName } from 'react-native';
+import { ColorSchemeName, Platform } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import AddReportScreen from '../screens/AddReportScreen';
 import MapScreen from '../screens/MapScreen';
-
+import { AndroidTheme, IosTheme } from '../../constants/Colors';
 
 const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
 
     return (
-        <NavigationContainer theme={ colorScheme === 'dark'? DarkTheme : DefaultTheme }>
+        <NavigationContainer theme={ Platform.OS === 'android'? AndroidTheme : IosTheme }>
             <HelloNavigator />
         </NavigationContainer>
     );

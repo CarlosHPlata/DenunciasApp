@@ -6,33 +6,39 @@ import { Report } from '../../store/types/report';
 import AdaptativeTouchable from '../UI/AdaptativeTouchable';
 import Card from '../UI/Card';
 import MapPreview from '../UI/MapPreview';
+import { getStateColor } from '../../../constants/Colors';
+import { useTheme } from '@react-navigation/native';
 
-const ReportShortCard = ({report, onToggle}: {report:Report, onToggle:() => void}) => {
+const ReportShortCard = ({report, stateColor, colors, onToggle}: {report:Report, stateColor:string, colors:any, onToggle:() => void}) => {
+
     return (
         <View>
             <View style={[styles.paddedView, styles.withBorderBottom]}>
-                <Text>{report.state}</Text>
-                <Text>Fecha: {report.date.toISOString().split('T')[0]}</Text>
+                <Text style={{ ...styles.state, color: stateColor}}>{report.state}</Text>
+                <Text style={styles.notResaltedText}>Fecha: {report.date.toISOString().split('T')[0]}</Text>
                 <Text>Lugar: {report.location?.address}</Text>
             </View>
             <AdaptativeTouchable style={styles.paddingShort} onPress={onToggle}>
                 <View style={styles.expandContainer}>
-                    <Text style={styles.linkText}>Ver mas</Text>
-                    <Ionicons name='caret-down-outline' size={14} color='blue'/>
+                    <Text style={{ ...styles.linkText, color: colors.primary}}>Ver mas</Text>
+                    <Ionicons name='caret-down-outline' size={14} color={colors.primary}/>
                 </View>
             </AdaptativeTouchable>
         </View>
     );
 };
 
-const ReportLongCard = ({report, onToggle}: {report:Report, onToggle:() => void}) => {
+const ReportLongCard = ({report, stateColor, colors, onToggle}: {report:Report, stateColor:string, colors:any, onToggle:() => void}) => {
     return (
         <View>
             <View style={[styles.paddedView, styles.withBorderBottom]}>
-                <Text>{report.state}</Text>
-                <Text>Fecha: {report.date.toISOString().split('T')[0]}</Text>
-                
-                <Text>Descripcion de lo sucedido: {report.description}</Text>
+                <Text style={{ ...styles.state, color: stateColor}}>{report.state}</Text>
+                <Text style={styles.notResaltedText}>Fecha: <Text style={{fontWeight: 'bold'}}>{report.date.toISOString().split('T')[0]}</Text></Text>
+
+                <View style={styles.descriptionContainer}>
+                    <Text style={styles.notResaltedText}>Descripcion de lo sucedido:</Text>
+                    <Text>{report.description}</Text>
+                </View>
 
                 <MapPreview location={{latitude: report.location?.location.latitude, longitude: report.location?.location.longitude}} onPress={()=>{}} >
                     <Text>Loading</Text>
@@ -40,8 +46,8 @@ const ReportLongCard = ({report, onToggle}: {report:Report, onToggle:() => void}
             </View>
             <AdaptativeTouchable style={styles.paddingShort} onPress={onToggle}>
                 <View style={styles.expandContainer}>
-                    <Text style={styles.linkText}>Ver menos</Text>
-                    <Ionicons name='caret-up-outline' size={14} color='blue'/>
+                <Text style={{ ...styles.linkText, color: colors.primary}}>Ver menos</Text>
+                    <Ionicons name='caret-down-outline' size={14} color={colors.primary}/>
                 </View>
             </AdaptativeTouchable>
         </View>
@@ -50,29 +56,46 @@ const ReportLongCard = ({report, onToggle}: {report:Report, onToggle:() => void}
 
 const ReportCard = ({report, onPress}: {report:Report, onPress:any}) => {
     const [ shortView, setShortView ] = useState(true);
+    
+    const { colors } = useTheme();
+
+    const color = getStateColor(report.state+'');
 
     return (
-        <Card style={styles.reportCard}>
+        <Card style={{...styles.reportCard, borderLeftColor: color}}>
             {shortView? (
-                <ReportShortCard report={report} onToggle={() => {setShortView(prev => !prev)}} />
+                <ReportShortCard report={report} stateColor={color} colors={colors} onToggle={() => {setShortView(prev => !prev)}} />
             ) : (
-                <ReportLongCard report={report} onToggle={() => {setShortView(prev => !prev)}} />
+                <ReportLongCard report={report} stateColor={color} colors={colors}  onToggle={() => {setShortView(prev => !prev)}} />
             )}
         </Card>
     );
 };
 
 const styles = StyleSheet.create({
+    state: {
+        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    descriptionContainer: {
+        marginVertical: 20
+    },
+    notResaltedText: {
+        color: '#ccc'
+    },
     reportCard: {
-        marginHorizontal: 10,
-        marginVertical: 10,
+        marginHorizontal: 0,
+        marginVertical: 5,
         padding: 0,
+        borderLeftWidth: 10,
     },
     paddedView: {
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 20
     },
     paddingShort: {
-        padding: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
     },
     withBorderBottom: {
         borderBottomColor: "#ccc",
@@ -83,7 +106,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     linkText: {
-        color: 'blue'
+        fontWeight: 'bold',
     }
 });
 

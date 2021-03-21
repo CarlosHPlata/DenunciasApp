@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import MapView, { MapEvent, Marker } from 'react-native-maps';
@@ -16,6 +17,8 @@ const MapScreen = (props:any) => {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     });
+
+    const colors:any = useTheme().colors;
 
     let markerCoordinates;
 
@@ -79,7 +82,7 @@ const MapScreen = (props:any) => {
             <MapView style={styles.map} region={mapRegion} onPress={selectLocationHandler}>
                 {markerCoordinates && <Marker title="Picked Location" coordinate={markerCoordinates} />}
             </MapView>
-            <Button title="saveLocation" onPress={onSave}/>
+            <Button color={colors.primaryLight} title="saveLocation" onPress={onSave}/>
         </View>
     );
 };
