@@ -11,9 +11,17 @@ import * as ReportActions from '../store/actions/report';
 import useAsyncActionDispatcher from '../hooks/useAsyncActionDispatcher';
 import LocationPicker from '../components/UI/LocationPicker';
 
+interface FullLocation {
+    location: {
+        latitude: number,
+        longitude: number,
+    },
+    address: string
+}
+
 const AddReportScreen = (props:any) => {
     const [ date, setDate ] = useState(new Date());
-    const [ location, setLocation ] = useState('');
+    const [ location, setLocation ] = useState<FullLocation>();
     const [ description, setDescription ] = useState('');
 
     const [ showDate, setShowDate ] = useState(false);
@@ -50,12 +58,9 @@ const AddReportScreen = (props:any) => {
                         </AdaptativeTouchable>
                     </InputContainer>
 
-                    <Input 
-                        label="Donde viste la infraccion?"
-                        value={location}
-                        onChangeText={(text:string) => {setLocation(text)}}
-                        iconName="locate-outline"
-                    />
+                    <InputContainer label="Donde viste la infraccion?" iconName="locate-outline">
+                        <LocationPicker onMapOpen={() => {props.navigation.navigate('Map', {location: location?.location})}} onLocationChange={(res:FullLocation) => {setLocation(res)}} route={props.route} />
+                    </InputContainer>
 
                     <Input 
                         label="Describe lo que viste"
@@ -64,8 +69,6 @@ const AddReportScreen = (props:any) => {
                         numberOfLines={4}
                         multiline
                     />
-
-                    <LocationPicker />
 
                     { showDate && (
                         <View>

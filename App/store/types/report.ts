@@ -3,11 +3,22 @@
 export const LOAD_REPORTS = 'LOAD_REPORTS';
 export const ADD_REPORT = 'ADD_REPORT';
 
+
+
+interface FullLocation {
+    location: {
+        latitude: number,
+        longitude: number,
+    },
+    address: string
+}
+
 export interface Report {
     id?: string | null | undefined
     date: Date,
-    location: string,
+    location: FullLocation | null | undefined,
     description: string,
+    state?: string | null | undefined,
     ownerId: string,
 }
 
