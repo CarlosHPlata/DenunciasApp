@@ -1,6 +1,6 @@
 const env = {
-    googleMapsApiKey: 'AIzaSyA9ASegTHsLgBJPQkq6A_CUTCqL-agqnhY',
-    firebaseUrl: 'https://reportsapp-22a8a-default-rtdb.firebaseio.com/'
+    googleMapsApiKey: '123',
+    firebaseUrl: '123'
 }
 
 export default env;
