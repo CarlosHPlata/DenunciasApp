@@ -82,7 +82,7 @@ const MapScreen = (props:any) => {
             <MapView style={styles.map} region={mapRegion} onPress={selectLocationHandler}>
                 {markerCoordinates && <Marker title="Picked Location" coordinate={markerCoordinates} />}
             </MapView>
-            <Button color={colors.primaryLight} title="saveLocation" onPress={onSave}/>
+            <Button color={colors.primaryLight} title="Guardar Direccion" onPress={onSave}/>
         </View>
     );
 };

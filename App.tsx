@@ -3,12 +3,11 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ReduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 
 import Navigation from './App/navigation';
 import useCachedResources from './App/hooks/useCachedResources';
 import { rootReducer } from './App/store/reducers/rootReducer';
-import { LogBox } from 'react-native';
 
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -30,6 +29,4 @@ export default function App() {
     </Provider>
   );
 }
-
-LogBox.ignoreLogs(['Warning:...']);
 

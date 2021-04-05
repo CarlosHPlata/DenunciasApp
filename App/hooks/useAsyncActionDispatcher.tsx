@@ -2,7 +2,9 @@
 import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-export default function useAsyncActionDispatcher ( action:any, dependencies:any[] ): [loadFn:()=>Promise<void>, isLoading: boolean, error: string | null | undefined] {
+type hookType = [loadFn: ()=>Promise<void>, isLoading: boolean, error: string | null | undefined];
+
+export default function useAsyncActionDispatcher ( action:any, dependencies:any[] ): hookType {
     const [ isLoading, setIsLoading ] = useState(false);
     const [ error, setError ] = useState<string | null>();
     

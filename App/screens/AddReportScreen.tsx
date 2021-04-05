@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Button, KeyboardAvoidingView, Platform, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button, ScrollView, KeyboardAvoidingView, Platform, StyleSheet, Text, View, ActivityIndicator, TextInput } from 'react-native';
 import { StackActions } from '@react-navigation/routers';
 
 import AdaptativeTouchable from '../components/UI/AdaptativeTouchable';
@@ -11,7 +9,9 @@ import * as ReportActions from '../store/actions/report';
 import useAsyncActionDispatcher from '../hooks/useAsyncActionDispatcher';
 import LocationPicker from '../components/UI/LocationPicker';
 import CustomButton from '../components/UI/CustomButton';
+import DatePicker from '../components/UI/DatePicker';
 import { useTheme } from '@react-navigation/native';
+import CameraPicker from '../components/UI/CameraPicker';
 
 interface FullLocation {
     location: {
@@ -25,17 +25,8 @@ const AddReportScreen = (props:any) => {
     const [ date, setDate ] = useState(new Date());
     const [ location, setLocation ] = useState<FullLocation>();
     const [ description, setDescription ] = useState('');
+
     const colors:any = useTheme().colors;
-
-    const [ showDate, setShowDate ] = useState(false);
-
-    const onDateChange = (event:any, selectedDate:Date|undefined) => {
-        setShowDate(Platform.OS === 'ios');
-        setDate(prev => {
-            const newDate = selectedDate || prev; 
-            return newDate
-        });
-    };
 
     const [addReport, isLoading, error] = useAsyncActionDispatcher( ReportActions.addReport.bind(this, {
         date: date, 
@@ -53,12 +44,11 @@ const AddReportScreen = (props:any) => {
     return (
         <KeyboardAvoidingView style={styles.screen} behavior='height' keyboardVerticalOffset={100}>
             <ScrollView style={styles.scroll}>
-                <View style={styles.form}>
+                <View>
+                    <CameraPicker />
 
-                    <InputContainer label="Cuando viste la infraccion?" iconName="time-outline" iconColor={colors.primary}>
-                        <AdaptativeTouchable style={styles.input} onPress={() => {setShowDate(true)}}> 
-                            <Text>{date.toISOString().split('T')[0]}</Text>
-                        </AdaptativeTouchable>
+                    <InputContainer label="Cuando viste la infraccion" iconName="time-outline" iconColor={colors.primary}>
+                        <DatePicker value={date} onDateChange={newDate => setDate(newDate)} />
                     </InputContainer>
 
                     <InputContainer label="Donde viste la infraccion?" iconName="locate-outline" iconColor={colors.primary}>
@@ -72,19 +62,6 @@ const AddReportScreen = (props:any) => {
                         numberOfLines={4}
                         multiline
                     />
-
-                    { showDate && (
-                        <View>
-                            <DateTimePicker 
-                                testID="dateTimePicker"
-                                value={date}
-                                mode='date'
-                                is24Hour={true}
-                                display="default"
-                                onChange={onDateChange}
-                            />
-                        </View>
-                    )}
                 </View>
             </ScrollView>
             <View style={styles.buttonContainer}>
@@ -107,14 +84,8 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 20,
     },
-    input: {
-        marginTop: 5,
-    },
     buttonContainer: {
         marginTop: 20,
-    },
-    form: {
-
     },
 });
 
